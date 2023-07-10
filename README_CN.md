@@ -1,63 +1,89 @@
 # File Downloader
 
-`FileDownloader` 类库是一个用于并发下载文件的简单实用工具。它允许您从指定的 URL 下载文件，并提供了控制最大并发下载数的选项。
+![GitHub](https://img.shields.io/github/license/Grey-Wind/FileDownloader.svg?style=flat-square)
 
-### 特点
+本文档提供了使用下载器类库的详细说明和示例代码。
 
-- 支持多线程下载，可同时下载多个文件块以加快下载速度。
-- 可通过设置最大并发下载数来控制同时进行的下载线程数量。
-- 提供灵活的接口，允许您指定下载文件的 URL、保存目录和文件名。
-- 自动处理文件大小，确保下载完整的文件。
+## 简介
 
-### 安装
+该下载器类库提供了一个简单而强大的方式来下载文件。您可以使用该类库来下载任意数量的文件，并按照顺序将它们保存到指定的路径中。
 
-您可以通过以下方式将 `FileDownloader` 类库集成到您的项目中：
+## 特点
 
-1. 从代码仓库中下载源代码。
-2. 将源代码编译为类库文件（DLL）。
-3. 将生成的 DLL 文件添加到您的项目中的引用。
+- 支持按顺序下载多个文件。
+- 提供了简单的接口来管理下载操作。
+- 可以自定义保存路径和文件名。
+- 支持断点续传，避免重复下载已下载的部分。
 
-### 使用示例
+## 安装
 
-```c#
-using System;
-using System.Threading.Tasks;
+您可以通过以下方式安装下载器类库：
 
-public class Program
-{
-    public static async Task Main()
-    {
-        string url = "https://example.com/file.txt";
-        string saveDirectory = "C:\\Downloads";
-        string fileName = "file.txt";
-        int maxConcurrentDownloads = 4;
+从源代码编译：
 
-        FileDownloader downloader = new FileDownloader();
-        await downloader.DownloadFile(url, saveDirectory, fileName, maxConcurrentDownloads);
-    }
-}
+```bash
+git clone https://github.com/Grey-Wind/FileDownloader.git
+cd FileDownloader
+dotnet build
 ```
 
-在上述示例中，我们创建了一个 `FileDownloader` 实例，并使用 `DownloadFile` 方法下载了指定 URL 的文件。您可以根据需求修改 `url`、`saveDirectory`、`fileName` 和 `maxConcurrentDownloads` 变量来适应您的实际情况。
+## 使用示例
 
-你可以不使用`maxConcurrentDownloads`参数，默认是4。
+以下示例演示了如何使用下载器类库下载文件：
 
-------
-
-在一行内使用：
 ```c#
-await new FileDownloader().DownloadFile("https://example.com/file.txt", "C:\\Downloads", "file.txt", 4);
+using FileDownloader;
+
+// 创建下载器对象
+Downloader downloader = new Downloader();
+
+// 准备要下载的文件的 URL 和保存路径
+string[] urls = {
+   "http://www.example.com/file1.txt",
+   "http://www.example.com/file2.txt",
+   "http://www.example.com/file3.txt"
+};
+
+string[] savePaths = {
+   "C:\\Downloads\\file1.txt",
+   "C:\\Downloads\\file2.txt",
+   "C:\\Downloads\\file3.txt"
+};
+
+// 调用下载器的 DownloadFiles 方法来顺序下载多个文件
+downloader.DownloadFiles(urls, savePaths);
 ```
 
-### 方法
+确保将 `urls` 和 `savePaths` 数组的长度保持一致，并且每个位置的 URL 对应正确的保存路径。
 
-下面是 `FileDownloader` 类中的主要方法：
+运行以上示例代码后，文件将按照顺序依次下载到指定的保存路径中。
 
-- `DownloadFile(string url, string saveDirectory, string fileName, int? maxConcurrentDownloads = null)`: 从给定的 URL 下载文件，并将其保存到指定的目录和文件名中。可选择性地设置最大并发下载数。
+## 许可证
 
-### 注意事项
+该项目基于 GNU GPL v3 许可证。详细的许可证内容请参阅 [LICENSE](./LICENSE) 文件。
 
-- 在使用 `FileDownloader` 类库时，请确保您具备合法的下载权限和网络连接。
-- 对于大型文件或网络条件不佳的情况，建议适当调整最大并发下载数以避免对服务器造成过多负担或导致下载失败。
+## 贡献
 
-这是对 `FileDownloader` 类库的详细介绍。您可以根据需要将此类库集成到自己的项目中，以实现高效的并发文件下载功能。祝您使用愉快！
+欢迎您为该项目做出贡献！如果您希望贡献代码或报告问题，请查阅 [贡献指南](./CONTRIBUTING.md)（忘写了）。
+
+## 常见问题解答
+
+### 问题 1
+
+问：如何处理下载过程中的错误和异常？
+
+答：您可以使用 `try-catch` 块捕获并处理下载过程中的异常。可以通过记录日志、输出错误信息或发送通知来适当地处理错误情况。
+
+### 问题 2
+
+问：是否支持并发下载？
+
+答：目前的下载器类库是按顺序下载文件的，不直接支持并发下载。但是，您可以根据自己的需求扩展该类库，以支持并发下载。
+
+## 更多信息
+
+- API 文档：请参阅 [API 文档](./API.md) （也没写）了解更多关于下载器类的信息。
+
+如果您需要进一步了解下载器类库的功能和使用方法，请参考 API 文档。
+
+如有任何其他问题，请随时提问或在 GitHub 上提交问题。
