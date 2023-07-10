@@ -14,7 +14,7 @@ public class FileDownloader
         _downloadTasks = new List<Task>();
     }
 
-    public void DownloadFile(string url, string saveDirectory, string fileName)
+    public async Task DownloadFile(string url, string saveDirectory, string fileName)
     {
         // 创建Web请求
         var webRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -22,7 +22,8 @@ public class FileDownloader
 
         // 获取文件大小
         long fileSize;
-        using (var response = webRequest.GetResponse())
+
+        using (var response = await webRequest.GetResponseAsync())
         {
             var contentLength = response.Headers.Get("Content-Length");
             fileSize = Convert.ToInt64(contentLength);
@@ -41,7 +42,7 @@ public class FileDownloader
         }
 
         // 等待所有下载任务完成
-        Task.WhenAll(_downloadTasks).Wait();
+        await Task.WhenAll(_downloadTasks);
     }
 
     private async Task DownloadChunk(string url, string saveDirectory, string fileName, long startByte, long endByte)
