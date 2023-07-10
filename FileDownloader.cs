@@ -19,9 +19,9 @@ public class FileDownloader
     {
         // 检查并发下载数是否合法
         int concurrentDownloads = maxConcurrentDownloads ?? _maxConcurrentDownloads;
-        if (concurrentDownloads <= 0)
+        if (concurrentDownloads <= 0 || concurrentDownloads > 1024)
         {
-            throw new ArgumentException("Concurrent downloads must be greater than 0.");
+            throw new ArgumentException("Concurrent downloads must be between 1 and 1024.");
         }
 
         // 创建Web请求
