@@ -2,63 +2,86 @@
 
 [Chinese](./README_CN.md)
 
-The FileDownloader library is a simple utility for concurrent file downloads. It allows you to download files from specified URLs and provides options to control the maximum concurrent downloads.
+![GitHub](https://img.shields.io/github/license/Grey-Wind/FileDownloader.svg?style=flat-square)
 
-### Features
+This document provides detailed instructions and sample code for using the File Downloader library.
 
-- Supports multithreaded downloading, allowing simultaneous downloading of multiple file chunks to speed up the process.
-- Provides the flexibility to specify the URL of the file to be downloaded, as well as the save directory and file name.
-- Automatically handles file size to ensure the complete download of files.
+## Introduction
 
-### Installation
+The File Downloader library provides a simple yet powerful way to download files. You can use this library to download any number of files and save them in the specified path.
 
-To integrate the FileDownloader library into your project, you can follow these steps:
+## Features
 
-1. Download the source code from the code repository.
-2. Compile the source code into a library file (DLL).
-3. Add the generated DLL file as a reference in your project.
+- Supports sequential downloading of multiple files.
+- Provides a simple interface to manage download operations.
+- Allows customizing the save path and file names.
+- Supports resumable downloads to avoid re-downloading already downloaded parts.
 
-### Usage Example
+## Installation
 
-```c#
-using System;
-using System.Threading.Tasks;
+You can install the File Downloader library by following these steps:
 
-public class Program
-{
-    public static async Task Main()
-    {
-        string url = "https://example.com/file.txt";
-        string saveDirectory = "C:\\Downloads";
-        string fileName = "file.txt";
-        int maxConcurrentDownloads = 4;
+Compile from source code:
 
-        FileDownloader downloader = new FileDownloader();
-        await downloader.DownloadFile(url, saveDirectory, fileName, maxConcurrentDownloads);
-    }
-}
+```bash
+git clone https://github.com/Grey-Wind/FileDownloader.git
+cd FileDownloader
+dotnet build
 ```
 
-In the above example, we create an instance of `FileDownloader` and use the `DownloadFile` method to download the file from the specified URL. You can modify the `url`, `saveDirectory`, `fileName`, and `maxConcurrentDownloads` variables according to your requirements.
+## Usage Example
 
-You can omit the `maxConcurrentDownloads` parameter, the default value is 4.
+The following example demonstrates how to use the File Downloader library to download files:
 
-------
+```csharp
+using FileDownloader;
 
-Use in one line:
-```c#
-await new FileDownloader().DownloadFile("https://example.com/file.txt", "C:\\Downloads", "file.txt", 4);
+// Create a downloader object
+Downloader downloader = new Downloader();
+
+// Prepare URLs and save paths for files to be downloaded
+string[] urls = {
+   "http://www.example.com/file1.txt",
+   "http://www.example.com/file2.txt",
+   "http://www.example.com/file3.txt"
+};
+
+string[] savePaths = {
+   "C:\\Downloads\\file1.txt",
+   "C:\\Downloads\\file2.txt",
+   "C:\\Downloads\\file3.txt"
+};
+
+// Call the DownloadFiles method of the downloader to sequentially download multiple files
+downloader.DownloadFiles(urls, savePaths);
 ```
 
-### Methods
+Make sure to keep the lengths of the `urls` and `savePaths` arrays consistent and ensure that each URL corresponds to the correct save path.
 
-Here are the main methods available in the `FileDownloader` class:
+After running the above example code, the files will be downloaded sequentially to the specified save paths.
 
-- `DownloadFile(string url, string saveDirectory, string fileName, int? maxConcurrentDownloads = null)`: Downloads a file from the given URL and saves it to the specified directory with the provided file name. The maximum concurrent downloads can be optionally set.
+## License
 
-### Notes
+This project is licensed under GNU GPL v3. For detailed license information, please refer to the [LICENSE](./LICENSE) file.
 
-- Ensure that you have legal download permissions and a stable network connection when using the FileDownloader library.
-- For large files or poor network conditions, it is recommended to adjust the maximum concurrent downloads to avoid excessive server load or download failures.
+## Contribution
 
-This concludes the detailed introduction to the `FileDownloader` library. You can integrate this library into your project as per your requirements to achieve efficient concurrent file downloading functionality. Happy downloading!
+You are welcome to contribute to this project! If you would like to contribute code or report issues, please check the [Contribution Guidelines](./CONTRIBUTING.md)(Forgot to write).
+
+## FAQ
+
+### Q: How to handle errors and exceptions during the download process?
+
+A: You can use try-catch blocks to catch and handle exceptions that occur during the download process. You can handle error situations appropriately by logging, outputting error messages, or sending notifications.
+
+### Q: Does it support concurrent downloads?
+
+A: The current File Downloader library downloads files sequentially and does not directly support concurrent downloads. However, you can extend the library according to your needs to support concurrent downloads.
+
+## More Information
+
+- API Documentation: Please refer to the [API Documentation](./API.md)(Forgot to write) for more information about the File Downloader class.
+
+If you need further information about the functionality and usage of the File Downloader library, please refer to the API documentation.
+
+If you have any other questions, feel free to ask or submit an issue on GitHub.
