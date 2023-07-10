@@ -42,8 +42,6 @@ public class FileDownloader
 
         // 等待所有下载任务完成
         Task.WhenAll(_downloadTasks).Wait();
-
-        Console.WriteLine("下载完成！");
     }
 
     private async Task DownloadChunk(string url, string saveDirectory, string fileName, long startByte, long endByte)
