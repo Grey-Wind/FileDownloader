@@ -6,16 +6,24 @@ using System.Threading.Tasks;
 
 public class FileDownloader
 {
-    private const int MaxConcurrentDownloads = 4; // 设置最大并发下载数
+    private int _maxConcurrentDownloads;
     private List<Task> _downloadTasks;
 
     public FileDownloader()
     {
+        _maxConcurrentDownloads = 4;
         _downloadTasks = new List<Task>();
     }
 
-    public async Task DownloadFile(string url, string saveDirectory, string fileName)
+    public async Task DownloadFile(string url, string saveDirectory, string fileName, int? maxConcurrentDownloads = null)
     {
+        // 检查并发下载数是否合法
+        int concurrentDownloads = maxConcurrentDownloads ?? _maxConcurrentDownloads;
+        if (concurrentDownloads <= 0)
+        {
+            throw new ArgumentException("Concurrent downloads must be greater than 0.");
+        }
+
         // 创建Web请求
         var webRequest = (HttpWebRequest)WebRequest.Create(url);
         webRequest.Method = "HEAD";
@@ -30,13 +38,13 @@ public class FileDownloader
         }
 
         // 计算每个线程需要下载的字节数
-        long chunkSize = fileSize / MaxConcurrentDownloads;
+        long chunkSize = fileSize / concurrentDownloads;
 
         // 启动多个下载任务
-        for (int i = 0; i < MaxConcurrentDownloads; i++)
+        for (int i = 0; i < concurrentDownloads; i++)
         {
             long startByte = i * chunkSize;
-            long endByte = (i == MaxConcurrentDownloads - 1) ? fileSize - 1 : (i + 1) * chunkSize - 1;
+            long endByte = (i == concurrentDownloads - 1) ? fileSize - 1 : (i + 1) * chunkSize - 1;
 
             _downloadTasks.Add(DownloadChunk(url, saveDirectory, fileName, startByte, endByte));
         }
